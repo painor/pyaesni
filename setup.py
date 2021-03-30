@@ -51,7 +51,7 @@ class CMakeBuild(build_ext):
                                    *ext.cmake_options,
                                    '-DPython_INCLUDE_DIR={}'.format(get_python_inc()),
                                    '-DPython_LIBRARY={}'.format(sysconfig.get_config_var('LIBDIR')),                                   '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
-                                   '-DPYTHON_VERSION=' + '.'.join(str(i) for i in sys.version_info[0:2])
+                                   '-DPYTHON_VERSION=' + '.'.join(str(i) for i in sys.version_info[0:3])
                                    ],
 
                                   cwd=self.build_temp)
