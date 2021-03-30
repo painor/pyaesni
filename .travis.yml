@@ -34,8 +34,22 @@ jobs:
         - "3.9-dev"
       script:
         - python3 setup.py install
+      deploy:
+        provider: pypi
+        username: __token__
+        edge:
+          branch: v1.8.45
+        password:
+          secure: Rs2VcQl/NJWT9zuSqKRmZX1hPLDCmBLjs7HUNcCGlHmtgkWbFuBPww+Nc3SpuU7jCJJtzquHL0OpCApIuPBWOcwk2H9AF5s8pt5HaxcW2iLHzcIUp+kBuX6NXYUTnt65s6TXNxSCs0O5MpukuUK1E5zn2wh1U0bdv5ZErJ3qkKcsGcgb2bOZfyhb0fBHT0KXMiwcZVeeskd9RjWDyCTRF6yMdwgmgpx8HvUqBJ8YZXUAzJtSAWaO2P0VKneyIrUvimhLlxALQ2hiGjJAdt7g4AgOlYk/ADuDloEhaPPGjcs+kMRIOPXpvn9yaoBprNz/Svd2ttsmN7XiY9MdIpoNvFqKsIendj0U+2Xxteead0aB5NnAxLfbQJ6PuV8yGM+XD3iGKmkZpPBtR8NaQYYpNaWx7y4+Nv2lHAVWPoWtM/VetJnAQc+uSs0N+XkSyiEKTwx4s529y2r+OL6lPwJQTVUiOlcsRtQxMCPAjXRdBKyB51rg1Ht945VdW/hDME5jwiUFja77jLpUwugsTbxeyBoe0zykAuBScDPZKVkdRJnJTYLDRb/gzY43ZGwSmtRgg1VwqXBrxTlOln9QlCs3jSWxRi3Yv0az/hsOmujx205qV2p0jpB93sn8YISz/J0HlFPe7qahJKdTPtTyeqdVO/F3tzXUBqzlR0/adLsc/ZM=
+        distributions: "sdist bdist_wheel --plat-name=manylinux1_x86_64" # Your distributions here
+
     - os: windows
       language: shell
+      env:
+        global:
+          - CIBW_ARCHS_WINDOWS=AMD64
+          - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
+          - CMAKE_GENERATOR_PLATFORM=x64
       before_install:
         - choco install python --version 3.8.6
         - choco install yasm
@@ -47,20 +61,18 @@ jobs:
         - python3 -m pip install cibuildwheel==1.10.0
       script:
         - python3 -m cibuildwheel --output-dir wheelhouse
+      deploy:
+        provider: pypi
+        username: __token__
+        edge:
+          branch: v1.8.45
+        password:
+          secure: Rs2VcQl/NJWT9zuSqKRmZX1hPLDCmBLjs7HUNcCGlHmtgkWbFuBPww+Nc3SpuU7jCJJtzquHL0OpCApIuPBWOcwk2H9AF5s8pt5HaxcW2iLHzcIUp+kBuX6NXYUTnt65s6TXNxSCs0O5MpukuUK1E5zn2wh1U0bdv5ZErJ3qkKcsGcgb2bOZfyhb0fBHT0KXMiwcZVeeskd9RjWDyCTRF6yMdwgmgpx8HvUqBJ8YZXUAzJtSAWaO2P0VKneyIrUvimhLlxALQ2hiGjJAdt7g4AgOlYk/ADuDloEhaPPGjcs+kMRIOPXpvn9yaoBprNz/Svd2ttsmN7XiY9MdIpoNvFqKsIendj0U+2Xxteead0aB5NnAxLfbQJ6PuV8yGM+XD3iGKmkZpPBtR8NaQYYpNaWx7y4+Nv2lHAVWPoWtM/VetJnAQc+uSs0N+XkSyiEKTwx4s529y2r+OL6lPwJQTVUiOlcsRtQxMCPAjXRdBKyB51rg1Ht945VdW/hDME5jwiUFja77jLpUwugsTbxeyBoe0zykAuBScDPZKVkdRJnJTYLDRb/gzY43ZGwSmtRgg1VwqXBrxTlOln9QlCs3jSWxRi3Yv0az/hsOmujx205qV2p0jpB93sn8YISz/J0HlFPe7qahJKdTPtTyeqdVO/F3tzXUBqzlR0/adLsc/ZM=
+        distributions: "sdist bdist_wheel" # Your distributions here
+
 env:
   global:
     - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*"
     - CIBW_BUILD_VERBOSITY=3
     - CIBW_SKIP="*-win32 *-manylinux_i686"
-    - CIBW_ARCHS_WINDOWS=AMD64
-    - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
-    - CMAKE_GENERATOR_PLATFORM=x64
 
-deploy:
-  provider: pypi
-  username: __token__
-  edge:
-    branch: v1.8.45
-  password:
-    secure: Rs2VcQl/NJWT9zuSqKRmZX1hPLDCmBLjs7HUNcCGlHmtgkWbFuBPww+Nc3SpuU7jCJJtzquHL0OpCApIuPBWOcwk2H9AF5s8pt5HaxcW2iLHzcIUp+kBuX6NXYUTnt65s6TXNxSCs0O5MpukuUK1E5zn2wh1U0bdv5ZErJ3qkKcsGcgb2bOZfyhb0fBHT0KXMiwcZVeeskd9RjWDyCTRF6yMdwgmgpx8HvUqBJ8YZXUAzJtSAWaO2P0VKneyIrUvimhLlxALQ2hiGjJAdt7g4AgOlYk/ADuDloEhaPPGjcs+kMRIOPXpvn9yaoBprNz/Svd2ttsmN7XiY9MdIpoNvFqKsIendj0U+2Xxteead0aB5NnAxLfbQJ6PuV8yGM+XD3iGKmkZpPBtR8NaQYYpNaWx7y4+Nv2lHAVWPoWtM/VetJnAQc+uSs0N+XkSyiEKTwx4s529y2r+OL6lPwJQTVUiOlcsRtQxMCPAjXRdBKyB51rg1Ht945VdW/hDME5jwiUFja77jLpUwugsTbxeyBoe0zykAuBScDPZKVkdRJnJTYLDRb/gzY43ZGwSmtRgg1VwqXBrxTlOln9QlCs3jSWxRi3Yv0az/hsOmujx205qV2p0jpB93sn8YISz/J0HlFPe7qahJKdTPtTyeqdVO/F3tzXUBqzlR0/adLsc/ZM=
-  distributions: "sdist bdist_wheel" # Your distributions here
