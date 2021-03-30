@@ -182,6 +182,5 @@ static struct PyModuleDef module = {
 };
 
 PyMODINIT_FUNC PyInit_pyaesni(void) {
-    printf("Call\n");
     return PyModule_Create(&module);
 }
