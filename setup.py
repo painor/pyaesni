@@ -8,6 +8,7 @@ from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 import distutils.sysconfig as sysconfig
 
+
 class CMakeExtension(Extension):
     def __init__(self, cmake_target, cmake_lists_dir, name=None, cmake_options=None, cmake_install_lib_prefix='lib',
                  **kwargs):
@@ -43,14 +44,20 @@ class CMakeBuild(build_ext):
 
             # Config
             cmake_build_dir = '{}_build'.format(ext.name)
+            # linux args
+            linux_options = []
+            if sys.platform != "win32":
+                linux_options = ['-DPython_INCLUDE_DIR={}'.format(get_python_inc()),
+                                 '-DPython_LIBRARY={}'.format(os.path.join(sysconfig.get_config_var('LIBDIR'),
+                                                                           sysconfig.get_config_var('LDLIBRARY')))]
+
             subprocess.check_call(['cmake',
                                    '-S', ext.cmake_lists_dir,
                                    '-B', cmake_build_dir,
                                    '-DCMAKE_BUILD_TYPE={}'.format(cfg),
                                    *ext.cmake_options,
-                                   '-DPython_INCLUDE_DIR={}'.format(get_python_inc()),
-                                   '-DPython_LIBRARY={}'.format(os.path.join(sysconfig.get_config_var('LIBDIR'),
-                                                                             sysconfig.get_config_var('LDLIBRARY'))),                                   '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
+                                   *linux_options,
+                                   '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
                                    '-DPYTHON_VERSION=' + '.'.join(str(i) for i in sys.version_info[0:3])
                                    ],
 
@@ -75,7 +82,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="pyaesni",
-    version="0.13",
+    version="0.14",
     ext_modules=[
         CMakeExtension(cmake_target="pyaesni",
                        cmake_lists_dir=".",
