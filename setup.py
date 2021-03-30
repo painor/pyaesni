@@ -6,6 +6,7 @@ import json
 from distutils.sysconfig import get_python_inc
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
+import distutils.sysconfig as sysconfig
 
 
 class CMakeExtension(Extension):
@@ -50,6 +51,7 @@ class CMakeBuild(build_ext):
                                    *ext.cmake_options,
                                    '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
                                    '-DPYTHON_INCLUDE_DIR={}'.format(get_python_inc()),
+                                   '-DPYTHON_LIBRARY={}'.format(sysconfig.get_config_var('LIBDIR')),
                                    '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
                                    '-DPYTHON_VERSION=' + '.'.join(str(i) for i in sys.version_info[0:2])
                                    ],
