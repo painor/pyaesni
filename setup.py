@@ -77,7 +77,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="pyaesni",
-    version="0.11",
+    version="0.12",
     ext_modules=[
         CMakeExtension(cmake_target="pyaesni",
                        cmake_lists_dir=".",
