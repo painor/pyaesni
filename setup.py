@@ -49,11 +49,8 @@ class CMakeBuild(build_ext):
                                    '-B', cmake_build_dir,
                                    '-DCMAKE_BUILD_TYPE={}'.format(cfg),
                                    *ext.cmake_options,
-                                   '-DPython_EXECUTABLE={}'.format(sys.executable),
-                                   '-DPython_ROOT_DIR={}'.format(format(sys.executable)),
                                    '-DPython_INCLUDE_DIR={}'.format(get_python_inc()),
-                                   '-DPython_LIBRARY={}'.format(sysconfig.get_config_var('LIBDIR')),
-                                   '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
+                                   '-DPython_LIBRARY={}'.format(sysconfig.get_config_var('LIBDIR')),                                   '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
                                    '-DPYTHON_VERSION=' + '.'.join(str(i) for i in sys.version_info[0:2])
                                    ],
 
