@@ -88,7 +88,7 @@ setup(
     long_description=open('README.rst').read().strip(),
     author='Painor',
     author_email='pi.oussama@gmail.com',
-    url='https://github.com/painor/telethon-tgcrypto',
+    url='https://github.com/painor/pyaesni',
     license='MIT License',
     keywords='aesni encryption crypto decryption ige',
     classifiers=[

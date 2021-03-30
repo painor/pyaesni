@@ -57,6 +57,7 @@ jobs:
       script:
         - python3 -m cibuildwheel --output-dir wheelhouse
       deploy:
+        skip_cleanup: true
         provider: pypi
         username: __token__
         edge:
