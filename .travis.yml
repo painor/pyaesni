@@ -2,7 +2,36 @@ language: python
 jobs:
   include:
     # perform a linux build
-    - services: docker
+    - language: python
+      before_install:
+        - sudo apt-get update
+        - sudo apt-get -y install yasm
+        - sudo apt-get -y purge cmake
+        - which cmake
+        - cmake --version
+        - echo $PATH
+        - sudo apt remove cmake
+        - sudo apt -y purge --auto-remove cmake
+        - sudo rm -rf /usr/local/cmake-*
+        - sudo apt remove cmake
+        - sudo apt -y purge --auto-remove cmake
+        - wget https://cmake.org/files/v3.20/cmake-3.20.0-linux-x86_64.sh;
+        - sudo sh cmake-3.20.0-linux-x86_64.sh --prefix=/usr/local --exclude-subdir;
+        - export PATH=${PATH/'3.12.4'/'3.20.0'}
+        - cmake --version
+        - echo $PATH
+        - python3 --version
+      python:
+        - "3.6"      # current default Python on Travis CI
+        - "3.6-dev"      # current default Python on Travis CI
+        - "3.7"
+        - "3.7-dev"
+        - "3.8"
+        - "3.8-dev"
+        - "3.9"
+        - "3.9-dev"
+      script:
+        - python3 install setup.py
     - os: windows
       language: shell
       before_install:
@@ -12,6 +41,10 @@ jobs:
         - choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
         - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
         - ln -s /c/Python38/python.exe /c/Python38/python3.exe
+      install:
+        - python3 -m pip install cibuildwheel==1.10.0
+      script:
+        - python3 -m cibuildwheel --output-dir wheelhouse
 env:
   global:
     - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*"
@@ -20,12 +53,7 @@ env:
     - CIBW_ARCHS_WINDOWS=AMD64
     - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
     - CMAKE_GENERATOR_PLATFORM=x64
-    - CIBW_BEFORE_BUILD_LINUX="yum -y install yasm cmake gcc g++ && pip install cmake && export CC=gcc"
-install:
-  - python3 -m pip install cibuildwheel==1.10.0
 
-script:
-  - python3 -m cibuildwheel --output-dir wheelhouse
 deploy:
   provider: pypi
   username: __token__
