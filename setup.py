@@ -43,7 +43,6 @@ class CMakeBuild(build_ext):
 
             # Config
             cmake_build_dir = '{}_build'.format(ext.name)
-            print("bdir", cmake_build_dir)
             subprocess.check_call(['cmake',
                                    '-S', ext.cmake_lists_dir,
                                    '-B', cmake_build_dir,
@@ -73,14 +72,33 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name="libaesni_py",
-    version="0.1",
+    name="pyaesni",
+    version="0.3",
     ext_modules=[
-        CMakeExtension(cmake_target="libaesni_py",
+        CMakeExtension(cmake_target="pyaesni",
                        cmake_lists_dir=".",
                        cmake_options=['-DCMAKE_ASM_NASM_COMPILER=yasm']
                        )
     ],
     cmdclass={'build_ext': CMakeBuild},
     zip_safe=False,
+    description='python bindings for aes ni',
+    long_description=open('README.rst').read().strip(),
+    author='Painor',
+    author_email='pi.oussama@gmail.com',
+    url='https://github.com/painor/telethon-tgcrypto',
+    license='MIT License',
+    keywords='aesni encryption crypto decryption ige',
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+    ],
+    python_requires='>=3.6',
+
 )

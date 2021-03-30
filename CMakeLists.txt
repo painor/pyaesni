@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14.7 FATAL_ERROR)
-project(libaesni_py C)
+project(pyaesni C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
@@ -9,19 +9,19 @@ find_package(Python "${PYTHON_VERSION}" EXACT COMPONENTS Development REQUIRED)
 
 include(GNUInstallDirs)
 
-add_library(libaesni_py SHARED libaesni_py.c)
+add_library(pyaesni SHARED pyaesni.c)
 
 get_target_property(aesni_includes libaesni INCLUDE_DIRECTORIES)
-target_include_directories(libaesni_py PRIVATE ${aesni_includes})
+target_include_directories(pyaesni PRIVATE ${aesni_includes})
 
-target_link_libraries(libaesni_py PRIVATE
+target_link_libraries(pyaesni PRIVATE
         Python::Python
         $<TARGET_OBJECTS:libaesni_asm>
         $<TARGET_OBJECTS:libaesni>
         )
 
-set_target_properties(libaesni_py PROPERTIES SUFFIX ".pyd" PREFIX "")
+set_target_properties(pyaesni PROPERTIES SUFFIX ".pyd" PREFIX "")
 
-add_dependencies(libaesni_py libaesni)
+add_dependencies(pyaesni libaesni)
 
-install(TARGETS libaesni_py RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS pyaesni RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
