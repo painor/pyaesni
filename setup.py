@@ -48,6 +48,7 @@ class CMakeBuild(build_ext):
                                    '-B', cmake_build_dir,
                                    '-DCMAKE_BUILD_TYPE={}'.format(cfg),
                                    *ext.cmake_options,
+                                   '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
                                    '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
                                    '-DPYTHON_VERSION=' + '.'.join(str(i) for i in sys.version_info[0:2])
                                    ],
