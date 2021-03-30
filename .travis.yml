@@ -33,7 +33,7 @@ deploy:
   edge:
     branch: v1.8.45
   password:
-    secure: Rs2VcQl/NJWT9zuSqKRmZX1hPLDCmBLjs7HUNcCGlHmtgkWbFuBPww+Nc3SpuU7jCJJtzquHL0OpCApIuPBWOcwk2H9AF5s8pt5HaxcW2iLHzcIUp+kBuX6NXYUTnt65s6TXNxSCs0O5MpukuUK1E5zn2wh1U0bdv5ZErJ3qkKcsGcgb2bOZfyhb0fBHT0KXMiwcZVeeskd9RjWDyCTRF6yMdwgmgpx8HvUqBJ8YZXUAzJtSAWaO2P0VKneyIrUvimhLlxALQ2hiGjJAdt7g4AgOlYk/ADuDloEhaPPGjcs+kMRIOPXpvn9yaoBprNz/Svd2ttsmN7XiY9MdIpoNvFqKsIendj0U+2Xxteead0aB5NnAxLfbQJ6PuV8yGM+XD3iGKmkZpPBtR8NaQYYpNaWx7y4+Nv2lHAVWPoWtM/VetJnAQc+uSs0N+XkSyiEKTwx4s529y2r+OL6lPwJQTVUiOlcsRtQxMCPAjXRdBKyB51rg1Ht945VdW/hDME5jwiUFja77jLpUwugsTbxeyBoe0zykAuBScDPZKVkdRJnJTYLDRb/gzY43ZGwSmtRgg1VwqXBrxTlOln9QlCs3jSWxRi3Yv0az/hsOmujx205qV2p0jpB93sn8YISz/J0HlFPe7qahJKdTPtTyeqdVO/F3tzXUBqzlR0/adLsc/ZM=
+    secure: I7tfkmuw9gkC5AeVDP/Nt/wRn15nYdhfeCxmB6cqiGrC4wPMIexbCAdPZ/RY20abw9VVkFZL2Nf1UEaGGfcrfFiZVKApdSw5jDcFCX3EKfx32NZ5rHW/T591N98JXL2KQwaz6crVdOSjFtxjJ1RY2a+rSCCJ51WCjOvzAcLTXft5ZXiL0YGvFIXaDKeNz7Y0HlqR9nTv5I7Juc1lODh+9KPyFc4S3d29f62BD2A8Aewy6uSFf4vfjOfliy1scy5b7Op7VyYEJnmtgajogCUUVYzsxAPW5KTOiDmvhkoxQmuUNQcorKMBjLZ9ze+GCcRhALjZrJVDN+Pjuhc/ORfbHQ6+mdBZyNM876gdgPrB+bXzcr5TNSiKgXD/Z5ExnpqDt09zOf47lxW85ayV+eCMjPEVwXkTWfXvroOvyv0d4jLgGpRMYCV+/cXv0jQuJd+uMIpSE/cp6384kF3PgyTSmI4ib8uRyMOQXckqu9V5j2q1zids3Ww7AxwHdlUg3P8gq4ofJVflCPDjCMOk0ImYMs7fjpT+i3NefgwbEyphUVtUalKZWwpy4zsJyBIQrjaitcXRK2ItlaYYg4RwSNEecJ9KgtSo30EUkcM3JwkaanucEQYgQZkp2R3rtlqMWkfFmFEdqfDruE2QT/ZXksvAxa1L2E818wXfmvOFkG1KIJI=
   distributions: "sdist bdist_wheel --plat-name=manylinux2010_x86_64" # Your distributions here
 
 jobs:
@@ -56,21 +56,13 @@ jobs:
         - python3 -m pip install cibuildwheel==1.10.0
       script:
         - python3 -m cibuildwheel --output-dir wheelhouse
-      before_deploy:
-        -  cd wheelhouse
-      deploy:
-        skip_cleanup: true
-        provider: pypi
-        username: __token__
-        edge:
-          branch: v1.8.45
-        password:
-          secure: Rs2VcQl/NJWT9zuSqKRmZX1hPLDCmBLjs7HUNcCGlHmtgkWbFuBPww+Nc3SpuU7jCJJtzquHL0OpCApIuPBWOcwk2H9AF5s8pt5HaxcW2iLHzcIUp+kBuX6NXYUTnt65s6TXNxSCs0O5MpukuUK1E5zn2wh1U0bdv5ZErJ3qkKcsGcgb2bOZfyhb0fBHT0KXMiwcZVeeskd9RjWDyCTRF6yMdwgmgpx8HvUqBJ8YZXUAzJtSAWaO2P0VKneyIrUvimhLlxALQ2hiGjJAdt7g4AgOlYk/ADuDloEhaPPGjcs+kMRIOPXpvn9yaoBprNz/Svd2ttsmN7XiY9MdIpoNvFqKsIendj0U+2Xxteead0aB5NnAxLfbQJ6PuV8yGM+XD3iGKmkZpPBtR8NaQYYpNaWx7y4+Nv2lHAVWPoWtM/VetJnAQc+uSs0N+XkSyiEKTwx4s529y2r+OL6lPwJQTVUiOlcsRtQxMCPAjXRdBKyB51rg1Ht945VdW/hDME5jwiUFja77jLpUwugsTbxeyBoe0zykAuBScDPZKVkdRJnJTYLDRb/gzY43ZGwSmtRgg1VwqXBrxTlOln9QlCs3jSWxRi3Yv0az/hsOmujx205qV2p0jpB93sn8YISz/J0HlFPe7qahJKdTPtTyeqdVO/F3tzXUBqzlR0/adLsc/ZM=
-        distributions: "sdist bdist_wheel" # Your distributions here
+      -after_success:
+        - python3 -m pip install twine
+        - python3 -m twine upload wheelhouse/*.whl
 
 env:
   global:
     - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*"
     - CIBW_BUILD_VERBOSITY=3
     - CIBW_SKIP="*-win32 *-manylinux_i686"
-
+    - TWINE_USERNAME=__token__
