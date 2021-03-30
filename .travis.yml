@@ -9,41 +9,39 @@ python:
   - "3.9"
   - "3.9-dev"
 
+dist: bionic
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install yasm
+  - sudo apt-get -y purge cmake
+  - which cmake
+  - cmake --version
+  - echo $PATH
+  - sudo apt remove cmake
+  - sudo apt -y purge --auto-remove cmake
+  - sudo rm -rf /usr/local/cmake-*
+  - sudo apt remove cmake
+  - sudo apt -y purge --auto-remove cmake
+  - wget https://cmake.org/files/v3.20/cmake-3.20.0-linux-x86_64.sh;
+  - sudo sh cmake-3.20.0-linux-x86_64.sh --prefix=/usr/local --exclude-subdir;
+  - export PATH=${PATH/'3.12.4'/'3.20.0'}
+  - cmake --version
+  - sudo apt install -y build-essential
+  - echo $PATH
+  - python --version
+script:
+  - python setup.py install
+deploy:
+  provider: pypi
+  username: __token__
+  edge:
+    branch: v1.8.45
+  password:
+    secure: Rs2VcQl/NJWT9zuSqKRmZX1hPLDCmBLjs7HUNcCGlHmtgkWbFuBPww+Nc3SpuU7jCJJtzquHL0OpCApIuPBWOcwk2H9AF5s8pt5HaxcW2iLHzcIUp+kBuX6NXYUTnt65s6TXNxSCs0O5MpukuUK1E5zn2wh1U0bdv5ZErJ3qkKcsGcgb2bOZfyhb0fBHT0KXMiwcZVeeskd9RjWDyCTRF6yMdwgmgpx8HvUqBJ8YZXUAzJtSAWaO2P0VKneyIrUvimhLlxALQ2hiGjJAdt7g4AgOlYk/ADuDloEhaPPGjcs+kMRIOPXpvn9yaoBprNz/Svd2ttsmN7XiY9MdIpoNvFqKsIendj0U+2Xxteead0aB5NnAxLfbQJ6PuV8yGM+XD3iGKmkZpPBtR8NaQYYpNaWx7y4+Nv2lHAVWPoWtM/VetJnAQc+uSs0N+XkSyiEKTwx4s529y2r+OL6lPwJQTVUiOlcsRtQxMCPAjXRdBKyB51rg1Ht945VdW/hDME5jwiUFja77jLpUwugsTbxeyBoe0zykAuBScDPZKVkdRJnJTYLDRb/gzY43ZGwSmtRgg1VwqXBrxTlOln9QlCs3jSWxRi3Yv0az/hsOmujx205qV2p0jpB93sn8YISz/J0HlFPe7qahJKdTPtTyeqdVO/F3tzXUBqzlR0/adLsc/ZM=
+  distributions: "sdist bdist_wheel --plat-name=manylinux1_x86_64" # Your distributions here
+
 jobs:
   include:
-    # perform a linux build
-    - services: docker
-      dist: bionic
-      before_install:
-        - sudo apt-get update
-        - sudo apt-get -y install yasm
-        - sudo apt-get -y purge cmake
-        - which cmake
-        - cmake --version
-        - echo $PATH
-        - sudo apt remove cmake
-        - sudo apt -y purge --auto-remove cmake
-        - sudo rm -rf /usr/local/cmake-*
-        - sudo apt remove cmake
-        - sudo apt -y purge --auto-remove cmake
-        - wget https://cmake.org/files/v3.20/cmake-3.20.0-linux-x86_64.sh;
-        - sudo sh cmake-3.20.0-linux-x86_64.sh --prefix=/usr/local --exclude-subdir;
-        - export PATH=${PATH/'3.12.4'/'3.20.0'}
-        - cmake --version
-        - sudo apt install -y build-essential
-        - echo $PATH
-        - python --version
-      script:
-        - python setup.py install
-      deploy:
-        provider: pypi
-        username: __token__
-        edge:
-          branch: v1.8.45
-        password:
-          secure: Rs2VcQl/NJWT9zuSqKRmZX1hPLDCmBLjs7HUNcCGlHmtgkWbFuBPww+Nc3SpuU7jCJJtzquHL0OpCApIuPBWOcwk2H9AF5s8pt5HaxcW2iLHzcIUp+kBuX6NXYUTnt65s6TXNxSCs0O5MpukuUK1E5zn2wh1U0bdv5ZErJ3qkKcsGcgb2bOZfyhb0fBHT0KXMiwcZVeeskd9RjWDyCTRF6yMdwgmgpx8HvUqBJ8YZXUAzJtSAWaO2P0VKneyIrUvimhLlxALQ2hiGjJAdt7g4AgOlYk/ADuDloEhaPPGjcs+kMRIOPXpvn9yaoBprNz/Svd2ttsmN7XiY9MdIpoNvFqKsIendj0U+2Xxteead0aB5NnAxLfbQJ6PuV8yGM+XD3iGKmkZpPBtR8NaQYYpNaWx7y4+Nv2lHAVWPoWtM/VetJnAQc+uSs0N+XkSyiEKTwx4s529y2r+OL6lPwJQTVUiOlcsRtQxMCPAjXRdBKyB51rg1Ht945VdW/hDME5jwiUFja77jLpUwugsTbxeyBoe0zykAuBScDPZKVkdRJnJTYLDRb/gzY43ZGwSmtRgg1VwqXBrxTlOln9QlCs3jSWxRi3Yv0az/hsOmujx205qV2p0jpB93sn8YISz/J0HlFPe7qahJKdTPtTyeqdVO/F3tzXUBqzlR0/adLsc/ZM=
-        distributions: "sdist bdist_wheel --plat-name=manylinux1_x86_64" # Your distributions here
-
     - os: windows
       language: shell
       env:
