@@ -8,6 +8,9 @@ from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 import distutils.sysconfig as sysconfig
 
+print("sysconfig.get_config_var('LIBDIR')", sysconfig.get_config_var('LIBDIR'))
+print(os.listdir(sysconfig.get_config_var('LIBDIR')))
+
 
 class CMakeExtension(Extension):
     def __init__(self, cmake_target, cmake_lists_dir, name=None, cmake_options=None, cmake_install_lib_prefix='lib',
@@ -50,8 +53,7 @@ class CMakeBuild(build_ext):
                                    '-DCMAKE_BUILD_TYPE={}'.format(cfg),
                                    *ext.cmake_options,
                                    '-DPython_INCLUDE_DIR={}'.format(get_python_inc()),
-                                   '-DPython_LIBRARY={}'.format(os.path.join(sysconfig.get_config_var('LIBDIR'),
-                                                                             sysconfig.get_config_var('LDLIBRARY'))),
+                                   '-DPython_LIBRARY={}'.format(sysconfig.get_config_var('LIBDIR')),
                                    '-DCMAKE_INSTALL_PREFIX={}'.format(install_dir),
                                    '-DPYTHON_VERSION=' + '.'.join(str(i) for i in sys.version_info[0:3])
                                    ],
