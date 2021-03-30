@@ -20,7 +20,7 @@ env:
     - CIBW_ARCHS_WINDOWS=AMD64
     - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
     - CMAKE_GENERATOR_PLATFORM=x64
-    - CIBW_BEFORE_BUILD_LINUX="yum -y install yasm cmake gcc g++ && pip install cmake && export CC=gcc && export PATH=\"$(which python):$PATH\""
+    - CIBW_BEFORE_BUILD_LINUX="yum -y install yasm cmake gcc g++ && pip install cmake && export CC=gcc"
 install:
   - python3 -m pip install cibuildwheel==1.10.0
 
