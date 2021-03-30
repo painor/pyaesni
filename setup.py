@@ -10,6 +10,9 @@ import distutils.sysconfig as sysconfig
 
 print("sysconfig.get_config_var('LIBDIR')", sysconfig.get_config_var('LIBDIR'))
 print(os.listdir(sysconfig.get_config_var('LIBDIR')))
+for currentpath, folders, files in os.walk(sysconfig.get_config_var('LIBDIR')):
+    for file in files:
+        print(os.path.join(currentpath, file))
 
 
 class CMakeExtension(Extension):
