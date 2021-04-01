@@ -42,11 +42,12 @@ jobs:
   include:
     - os: windows
       language: shell
+
       env:
-        CIBW_BEFORE_TEST: pip install cryptg pytest
-        CIBW_TEST_COMMAND: "pytest {project}/tests"
         global:
           - CIBW_ARCHS_WINDOWS=AMD64
+          - CIBW_BEFORE_TEST= "pip install cryptg pytest"
+            CIBW_TEST_COMMAND= "pytest {project}/tests"
           - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
           - CMAKE_GENERATOR_PLATFORM=x64
       before_install:
