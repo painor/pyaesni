@@ -1,71 +1,51 @@
-language: python
-python:
-  - "3.6"      # current default Python on Travis CI
-  - "3.7"
-  - "3.8"
-  - "3.9"
-  - "3.10"
-
-dist: bionic
-before_install:
-  - sudo apt-get update
-  - sudo apt-get -y install yasm
-  - sudo apt-get -y purge cmake
-  - which cmake
-  - cmake --version
-  - echo $PATH
-  - sudo apt remove cmake
-  - sudo apt -y purge --auto-remove cmake
-  - sudo rm -rf /usr/local/cmake-*
-  - sudo apt remove cmake
-  - sudo apt -y purge --auto-remove cmake
-  - wget https://cmake.org/files/v3.20/cmake-3.20.0-linux-x86_64.sh;
-  - sudo sh cmake-3.20.0-linux-x86_64.sh --prefix=/usr/local --exclude-subdir;
-  - export PATH=${PATH/'3.12.4'/'3.20.0'}
-  - cmake --version
-  - sudo apt install -y build-essential
-  - echo $PATH
-  - python --version
-script:
-  - python setup.py install
-  - pip install pytest cryptg
-  - pytest
-deploy:
-  provider: pypi
-  username: __token__
-  edge:
-    branch: v1.8.45
-  password:
-    secure: I7tfkmuw9gkC5AeVDP/Nt/wRn15nYdhfeCxmB6cqiGrC4wPMIexbCAdPZ/RY20abw9VVkFZL2Nf1UEaGGfcrfFiZVKApdSw5jDcFCX3EKfx32NZ5rHW/T591N98JXL2KQwaz6crVdOSjFtxjJ1RY2a+rSCCJ51WCjOvzAcLTXft5ZXiL0YGvFIXaDKeNz7Y0HlqR9nTv5I7Juc1lODh+9KPyFc4S3d29f62BD2A8Aewy6uSFf4vfjOfliy1scy5b7Op7VyYEJnmtgajogCUUVYzsxAPW5KTOiDmvhkoxQmuUNQcorKMBjLZ9ze+GCcRhALjZrJVDN+Pjuhc/ORfbHQ6+mdBZyNM876gdgPrB+bXzcr5TNSiKgXD/Z5ExnpqDt09zOf47lxW85ayV+eCMjPEVwXkTWfXvroOvyv0d4jLgGpRMYCV+/cXv0jQuJd+uMIpSE/cp6384kF3PgyTSmI4ib8uRyMOQXckqu9V5j2q1zids3Ww7AxwHdlUg3P8gq4ofJVflCPDjCMOk0ImYMs7fjpT+i3NefgwbEyphUVtUalKZWwpy4zsJyBIQrjaitcXRK2ItlaYYg4RwSNEecJ9KgtSo30EUkcM3JwkaanucEQYgQZkp2R3rtlqMWkfFmFEdqfDruE2QT/ZXksvAxa1L2E818wXfmvOFkG1KIJI=
-  distributions: "sdist bdist_wheel --plat-name=manylinux2010_x86_64" # Your distributions here
-
+name: Testing gh
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 jobs:
-  include:
-    - os: windows
-      language: shell
-      env:
-        - CIBW_ARCHS_WINDOWS=AMD64
-        - CIBW_BEFORE_TEST="pip install cryptg pytest"
-        - CIBW_TEST_COMMAND="pytest {project}/tests"
-        - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
-        - CMAKE_GENERATOR_PLATFORM=x64
-      before_install:
-        - choco install python --version 3.8.8
-        - choco install yasm
-        - choco install cmake
-        - choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
-        - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
-        - ln -s /c/Python38/python.exe /c/Python38/python3.exe
-      install:
-        - python3 -m pip install cibuildwheel==1.10.0
-      script:
-        - python3 -m cibuildwheel --output-dir wheelhouse
-      after_success:
-        - python3 -m pip install twine
-        - python3 -m twine upload wheelhouse/*.whl
-
-env:
-  global:
-    - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*" cp310-*"
-    - CIBW_BUILD_VERBOSITY=3
-    - TWINE_USERNAME=__token__
+  build:
+    runs-on: '${{ matrix.os }}'
+    strategy:
+      matrix:
+        os:
+          - ubuntu-18.04
+        python-version:
+          - '3.5'
+          - '3.6'
+          - '3.7'
+          - '3.8'
+          - '3.9'
+          - '3.10'
+    steps:
+      - name: 'Set up Python ${{ matrix.python-version }}'
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python-version }}'
+      - uses: actions/checkout@v2
+      - run: sudo apt-get update
+      - run: sudo apt-get -y install yasm
+      - run: sudo apt-get -y purge cmake
+      - run: which cmake
+      - run: cmake --version
+      - run: echo $PATH
+      - run: sudo apt remove cmake
+      - run: sudo apt -y purge --auto-remove cmake
+      - run: sudo rm -rf /usr/local/cmake-*
+      - run: sudo apt remove cmake
+      - run: sudo apt -y purge --auto-remove cmake
+      - run: 'wget https://cmake.org/files/v3.20/cmake-3.20.0-linux-x86_64.sh;'
+      - run: >-
+          sudo sh cmake-3.20.0-linux-x86_64.sh --prefix=/usr/local
+          --exclude-subdir;
+      - run: 'export PATH=${PATH/''3.12.4''/''3.20.0''}'
+      - run: cmake --version
+      - run: sudo apt install -y build-essential
+      - run: echo $PATH
+      - run: python --version
+      - run: python setup.py install
+      - run: pip install pytest cryptg
+      - run: pytest
