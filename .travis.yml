@@ -66,6 +66,6 @@ jobs:
 
 env:
   global:
-    - CIBW_BUILD="cp36-* cp35-* cp37-* cp38-* cp39-*"
+    - CIBW_BUILD="cp36-* cp35-* cp37-* cp38-* cp39-*" cp10-*"
     - CIBW_BUILD_VERBOSITY=3
     - TWINE_USERNAME=__token__
