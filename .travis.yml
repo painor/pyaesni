@@ -56,7 +56,7 @@ jobs:
         - export PATH="/c/Python310:/c/Python310/Scripts:$PATH"
         - ln -s /c/Python310/python.exe /c/Python310/python3.exe
       install:
-        - python3 -m pip install cibuildwheel==1.10.0
+        - python3 -m pip install cibuildwheel
       script:
         - python3 -m cibuildwheel --output-dir wheelhouse
       after_success:
