@@ -1,6 +1,5 @@
 language: python
 python:
-  - "3.6"
   - "3.7"
   - "3.8"
   - "3.9"  # current default Python on Travis CI
@@ -66,6 +65,6 @@ jobs:
 
 env:
   global:
-    - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*" cp310-*"
+    - CIBW_BUILD="cp37-* cp38-* cp39-*" cp310-*"
     - CIBW_BUILD_VERBOSITY=3
     - TWINE_USERNAME=__token__
